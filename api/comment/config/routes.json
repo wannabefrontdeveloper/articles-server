@@ -15,6 +15,13 @@
      "config": {
       "policies": []
      }
-    }
+    },
+     {
+      "method": "PUT",
+      "path": "/articles/:articleId/comments/:id",
+      "handler": "comment.update",
+      "config":{"policies":[]}
+     }
+    
   ]
 }
