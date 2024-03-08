@@ -29,4 +29,33 @@ module.exports = {
       sanitizeEntity(entity, { model: strapi.models.comment })
     );
   },
+  async update(ctx) {
+    const { articleId, id } = ctx.params; // URL 파라미터 추출
+    // 댓글 조회
+    const comment = await strapi.services.comment.findOne({
+      id,
+      article: articleId,
+    });
+    // 데이터가 존재하지 않을 때
+    if (!comment) {
+      return ctx.throw(404);
+    }
+    // article 또는 user 변경 막기
+    if (ctx.request.body.article || ctx.request.body.user) {
+      return ctx.throw(400, "article or user field cannot be changed");
+    }
+    // 사용자 확인
+    if (ctx.state.user.id !== comment.user.id) {
+      return ctx.unauthroized(`You can't update this entry`);
+    }
+    // comment  데이터 업데이트
+    const entity = await strapi.services.comment.update(
+      {
+        id,
+      },
+      ctx.request.body
+    );
+    // 응답 반환
+    return sanitizeEntity(entity, { model: strapi.models.comment });
+  },
 };
