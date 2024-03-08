@@ -1,4 +1,4 @@
-const { sanitizeEntitiy } = require("strapi-utils");
+const { sanitizeEntity } = require("strapi-utils");
 
 module.exports = {
   async create(ctx) {
@@ -7,7 +7,7 @@ module.exports = {
     // article 데이터 생성
     const entity = await strapi.services.article.create(ctx.request.body);
     // 잘못된 필드 및 Private 값 제외하고 반환
-    return sanitizeEntitiy(entity, { model: strapi.models.article });
+    return sanitizeEntity(entity, { model: strapi.models.article });
   },
 
   async update(ctx) {
@@ -36,7 +36,7 @@ module.exports = {
     );
 
     // 응답 반환
-    return sanitizeEntitiy(entity, { model: strapi.models.article });
+    return sanitizeEntity(entity, { model: strapi.models.article });
   },
 
   async delete(ctx) {
@@ -53,7 +53,10 @@ module.exports = {
       return ctx.unauthorized(`You can't remove this entry`);
     }
 
+    // 데이터 삭제
+    await strapi.services.article.delete({ id });
+
     // 응답 반환
-    ctx.status = 404; // no content
+    ctx.status = 204; // no content
   },
 };
