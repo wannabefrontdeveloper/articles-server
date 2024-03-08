@@ -38,4 +38,22 @@ module.exports = {
     // 응답 반환
     return sanitizeEntitiy(entity, { model: strapi.models.article });
   },
+
+  async delete(ctx) {
+    const { id } = ctx.params; // URL 파라미터에서 id 추출
+    const article = await strapi.services.article.findOne({ id }); // id로 데이터 조회
+
+    // 데이터가 존재하지 않을 때
+    if (!article) {
+      return ctx.throw(404);
+    }
+
+    // 사용자 id와 article의 작성자 id가 일치하는지 확인
+    if (ctx.state.user.id !== article.user.id) {
+      return ctx.unauthorized(`You can't remove this entry`);
+    }
+
+    // 응답 반환
+    ctx.status = 404; // no content
+  },
 };
