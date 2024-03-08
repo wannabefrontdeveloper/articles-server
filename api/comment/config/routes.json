@@ -7,6 +7,14 @@
       "config": {
         "policies": []
       }
+    },
+    {
+     "method": "GET",
+     "path": "/articles/:articleId/comments",
+     "handler": "comment.find",
+     "config": {
+      "policies": []
+     }
     }
   ]
 }
