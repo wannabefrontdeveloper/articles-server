@@ -58,4 +58,26 @@ module.exports = {
     // 응답 반환
     return sanitizeEntity(entity, { model: strapi.models.comment });
   },
+  async delete(ctx) {
+    const { articleId, id } = ctx.params; // URL 파라미터 추출
+    // 댓글 조회
+    const comment = await strapi.services.comment.findOne({
+      id,
+      article: articleId,
+    });
+    // 데이터가 존재하지 않을 때
+    if (!comment) {
+      return ctx.throw(404);
+    }
+
+    // 사용자 확인
+    if (ctx.state.user.id !== comment.user.id) {
+      return ctx.unauthroized(`You can't remove this entry`);
+    }
+
+    // 데이터 삭제
+    await strapi.services.comment.delete({ id });
+
+    ctx.status = 204;
+  },
 };
