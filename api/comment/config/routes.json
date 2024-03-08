@@ -21,7 +21,14 @@
       "path": "/articles/:articleId/comments/:id",
       "handler": "comment.update",
       "config":{"policies":[]}
+     },
+     {
+      "method": "DELETE",
+      "path": "/articles/:articleId/comments/:id",
+      "handler": "comment.delete",
+      "config": {
+        "policies": []
+      }
      }
-    
   ]
 }
