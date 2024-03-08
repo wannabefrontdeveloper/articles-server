@@ -19,4 +19,14 @@ module.exports = {
     // 응답 반환
     return sanitizeEntity(entity, { model: strapi.models.comment });
   },
+  async find(ctx) {
+    // articleId로 댓글 조회
+    const entities = await strapi.services.commnet.find({
+      article: ctx.params.articleId,
+    });
+    // 각 데이터에 대해 sanitizeEntity를 처리하여 응답 반환
+    return entities.map((entity) =>
+      sanitizeEntity(entity, { model: strapi.models.comment })
+    );
+  },
 };
